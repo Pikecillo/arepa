@@ -3,7 +3,7 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-#include "Shader.h"
+#include <arepa/Shader.h>
 
 Shader::Shader() : m_handle(0) {}
 
@@ -49,19 +49,13 @@ bool Shader::is_valid() const {
     return true;
 }
 
-VertexShader::VertexShader() : Shader() {}
-
 void VertexShader::create() {
     m_handle = glCreateShader(GL_VERTEX_SHADER);
 }
 
-FragmentShader::FragmentShader() : Shader() {}
-
 void FragmentShader::create() {
     m_handle = glCreateShader(GL_FRAGMENT_SHADER);
 }
-
-GeometryShader::GeometryShader() : Shader() {}
 
 void GeometryShader::create() {
     m_handle = glCreateShader(GL_GEOMETRY_SHADER);

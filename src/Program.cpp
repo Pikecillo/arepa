@@ -1,7 +1,7 @@
 #include <assert.h>
 
-#include "Common.h"
-#include "Program.h"
+#include <arepa/Common.h>
+#include <arepa/Program.h>
 
 Program::Ptr Program::create(const std::vector<Shader::Ptr>& shaders)
 {

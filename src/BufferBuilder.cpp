@@ -1,4 +1,4 @@
-#include "BufferBuilder.h"
+#include <arepa/BufferBuilder.h>
 
 VertexBuffer::Ptr BufferBuilder::build_position_buffer() const {
     VertexBuffer::Ptr vbo = VertexBuffer::create();

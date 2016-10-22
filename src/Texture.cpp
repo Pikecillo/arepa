@@ -1,7 +1,5 @@
-#include "Texture.h"
-
-#include <GL/glew.h>
-#include <GL/glut.h>
+#include <arepa/Common.h>
+#include <arepa/Texture.h>
 
 Texture::Ptr Texture::create() {
     return std::shared_ptr<Texture>(new Texture());

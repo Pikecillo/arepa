@@ -26,7 +26,7 @@ public:
     void set_data(const std::vector<float> &data);
 
 private:
-    VertexBuffer();
+    VertexBuffer() = default;
 };
 
 class IndexBuffer : public Buffer {

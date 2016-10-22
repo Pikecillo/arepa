@@ -1,5 +1,5 @@
-#include "Common.h"
-#include "Framebuffer.h"
+#include <arepa/Common.h>
+#include <arepa/Framebuffer.h>
 
 Renderbuffer::Renderbuffer(std::uint32_t width, std::uint32_t height,
 			   Type type) {

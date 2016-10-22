@@ -3,16 +3,16 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-#include "Buffer.h"
-#include "BufferBuilder.h"
-#include "FileReader.h"
-#include "Framebuffer.h"
-#include "Mesh.h"
-#include "MeshLoader.h"
-#include "Program.h"
-#include "ShaderFactory.h"
-#include "Timer.h"
-#include "Transformation.h"
+#include <arepa/Buffer.h>
+#include <arepa/BufferBuilder.h>
+#include <arepa/FileReader.h>
+#include <arepa/Framebuffer.h>
+#include <arepa/Mesh.h>
+#include <arepa/MeshLoader.h>
+#include <arepa/Program.h>
+#include <arepa/ShaderFactory.h>
+#include <arepa/Timer.h>
+#include <arepa/Transformation.h>
 
 Program::Ptr program;
 IndexBuffer::Ptr ibo;

@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <fstream>
 
-#include "FileReader.h"
+#include <arepa/FileReader.h>
 
 std::string FileReader::read_text_file(const std::string &filename) {
     std::ifstream input(filename.c_str(), std::ios::in);

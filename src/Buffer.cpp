@@ -1,7 +1,7 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-#include "Buffer.h"
+#include <arepa/Buffer.h>
 
 Buffer::Buffer() : m_handle(0) {
     glGenBuffers(1, &m_handle);
@@ -10,8 +10,6 @@ Buffer::Buffer() : m_handle(0) {
 Buffer::~Buffer() {
     glDeleteBuffers(1, &m_handle);
 }
-
-VertexBuffer::VertexBuffer() : Buffer() {}
 
 VertexBuffer::Ptr VertexBuffer::create() {
     return std::shared_ptr<VertexBuffer>(new VertexBuffer);

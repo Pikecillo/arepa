@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "MeshLoader.h"
+#include <arepa/MeshLoader.h>
 
 #define V_TOK 		"v"
 #define VN_TOK 		"vn"
