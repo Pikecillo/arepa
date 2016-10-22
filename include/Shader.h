@@ -27,7 +27,7 @@ protected:
 
 class VertexShader : public Shader {
 public:
-    VertexShader();
+    VertexShader() = default;
 
     void operator=(const VertexShader &other) = delete;
 
@@ -37,7 +37,7 @@ protected:
 
 class FragmentShader : public Shader {
 public:
-    FragmentShader();
+    FragmentShader() = default;
 
     void operator=(const VertexShader &other) = delete;
 
@@ -47,7 +47,7 @@ protected:
 
 class GeometryShader : public Shader {
 public:
-    GeometryShader();
+    GeometryShader() = default;
 
     void operator=(const VertexShader &other) = delete;
 
