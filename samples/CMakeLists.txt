@@ -19,11 +19,8 @@ if (GLUT_FOUND)
     link_libraries(${GLUT_LIBRARIES})
 endif()
 
-include_directories(include)
-file(GLOB SOURCES "src/*.cpp")
-set(CMAKE_CXX_FLAGS "-std=c++0x")
-add_library(arepa STATIC ${SOURCES})
+set(EXECUTABLE_OUTPUT_PATH ..)
 
-set(AREPA_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-add_subdirectory(samples)
+include_directories(${AREPA_INCLUDE_DIR})
+add_executable(arepa-sample1 Main.cpp)
+target_link_libraries(arepa-sample1 arepa)
