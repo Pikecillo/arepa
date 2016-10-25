@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <memory>
 
+#include <arepa/Texture.h>
+
 class Renderbuffer {
 public:
     using Ptr = std::shared_ptr<Renderbuffer>;
@@ -14,9 +16,9 @@ public:
 
     virtual ~Renderbuffer();
 
-    void bind();
+    void bind() const;
 
-    void unbind();
+    void unbind() const;
 
 private:
     Renderbuffer(std::uint32_t width, std::uint32_t height, Type type);
@@ -34,9 +36,17 @@ public:
 
     virtual ~Framebuffer();
 
-    void bind();
+    void bind() const;
 
-    void unbind();
+    void unbind() const;
+
+    void attach_color(Texture::Ptr texture, std::uint8_t slot) const;
+
+    void attach_depth(Texture::Ptr texture) const;
+
+    bool is_valid() const;
+
+    void blit() const;
 
 private:
     Framebuffer();

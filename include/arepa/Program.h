@@ -4,9 +4,9 @@
 #include <memory>
 #include <vector>
 
-#include "Attribute.h"
-#include "Buffer.h"
-#include "Shader.h"
+#include <arepa/Attribute.h>
+#include <arepa/Buffer.h>
+#include <arepa/Shader.h>
 
 class Program {
 public:
@@ -33,7 +33,7 @@ public:
 
     void set_uniform_1f(const std::string &name, float value);
 
-    void set_uniform_1i(const std::string &name, int value);
+    void set_uniform_1i(const std::string &name, std::int32_t value);
 
     void set_uniform_matrix_4f(const std::string &name, float matrix[],
 			       bool transpose=false);

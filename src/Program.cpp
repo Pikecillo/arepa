@@ -86,6 +86,8 @@ bool Program::draw(Program::Mode mode, IndexBuffer::Ptr index) {
     if(!index)
 	return false;
 
+    index->bind();
+
     bind();
     glDrawElements(gl_mode(mode), index->size(), GL_UNSIGNED_INT, 0);
     unbind();
@@ -126,7 +128,7 @@ void Program::set_uniform_1f(const std::string &name, float value) {
     glUniform1f(location, value);
 }
 
-void Program::set_uniform_1i(const std::string &name, int value) {
+void Program::set_uniform_1i(const std::string &name, std::int32_t value) {
     int location = glGetUniformLocation(m_handle, name.c_str());
     assert(location != -1);
     glUniform1i(location, value);

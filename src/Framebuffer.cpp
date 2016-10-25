@@ -26,11 +26,11 @@ Renderbuffer::Ptr Renderbuffer::create(std::uint32_t width,
     return std::shared_ptr<Renderbuffer>(new Renderbuffer(width, height, type));
 }
 
-void Renderbuffer::bind() {
+void Renderbuffer::bind() const {
     glBindRenderbuffer(GL_RENDERBUFFER, m_handle);
 }
 
-void Renderbuffer::unbind() {
+void Renderbuffer::unbind() const {
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
@@ -46,10 +46,37 @@ Framebuffer::Ptr Framebuffer::create() {
     return std::shared_ptr<Framebuffer>(new Framebuffer);
 }
 
-void Framebuffer::bind() {
-    glBindFramebuffer(GL_FRAMEBUFFER, m_handle);
+void Framebuffer::bind() const {
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_handle);
 }
 
-void Framebuffer::unbind() {
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+void Framebuffer::unbind() const {
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+}
+
+void Framebuffer::attach_color(Texture::Ptr texture, std::uint8_t slot) const {
+    bind();
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + slot,
+			   GL_TEXTURE_2D, texture->handle(), 0);
+    unbind();
+}
+
+void Framebuffer::attach_depth(Texture::Ptr texture) const {
+    bind();
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+			   GL_TEXTURE_2D, texture->handle(), 0);
+    unbind();
+}
+
+bool Framebuffer::is_valid() const {
+    return GL_FRAMEBUFFER_COMPLETE == glCheckFramebufferStatus(GL_FRAMEBUFFER);
+}
+
+void Framebuffer::blit() const {
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_handle);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+    // TODO: remove hardcoded values
+    glBlitFramebuffer(0, 0, 255, 255, 0, 0, 255, 255,
+		      GL_COLOR_BUFFER_BIT, GL_NEAREST);
 }

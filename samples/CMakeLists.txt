@@ -22,5 +22,9 @@ endif()
 set(EXECUTABLE_OUTPUT_PATH ..)
 
 include_directories(${AREPA_INCLUDE_DIR})
-add_executable(arepa-sample1 Main.cpp)
+
+add_executable(arepa-sample1 SampleMain1.cpp)
 target_link_libraries(arepa-sample1 arepa)
+
+add_executable(arepa-sample2 SampleMain2.cpp)
+target_link_libraries(arepa-sample2 arepa)

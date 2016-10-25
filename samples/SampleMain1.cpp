@@ -6,7 +6,6 @@
 #include <arepa/Buffer.h>
 #include <arepa/BufferBuilder.h>
 #include <arepa/FileReader.h>
-#include <arepa/Framebuffer.h>
 #include <arepa/Mesh.h>
 #include <arepa/MeshLoader.h>
 #include <arepa/Program.h>
@@ -17,9 +16,7 @@
 Program::Ptr program;
 IndexBuffer::Ptr ibo;
 VertexBuffer::Ptr pos_vbo;
-VertexBuffer::Ptr tex_vbo;
 VertexBuffer::Ptr nor_vbo;
-Framebuffer::Ptr fbo;
 Mesh::Ptr mesh;
 
 void display() {
@@ -56,10 +53,6 @@ void display() {
     glDisable(GL_DEPTH_TEST);
 
     glutSwapBuffers();
-}
-
-void init_framebuffer() {
-    fbo = Framebuffer::create();
 }
 
 void init_shaders() {
@@ -103,7 +96,6 @@ int main(int argc, char *argv[]) {
     init_shaders();
     init_mesh();
     init_buffers();
-    init_framebuffer();
 
     glutMainLoop();
 }
