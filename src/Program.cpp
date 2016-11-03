@@ -122,26 +122,28 @@ bool Program::is_valid() {
     return true;
 }
 
-void Program::set_uniform_1f(const std::string &name, float value) {
+void Program::set_uniform_1f(const std::string &name, const float value) {
     int location = glGetUniformLocation(m_handle, name.c_str());
     assert(location != -1);
     glUniform1f(location, value);
 }
 
-void Program::set_uniform_1i(const std::string &name, std::int32_t value) {
+void Program::set_uniform_1i(const std::string &name,
+			     const std::int32_t value) {
     int location = glGetUniformLocation(m_handle, name.c_str());
     assert(location != -1);
     glUniform1i(location, value);
 }
 
-void Program::set_uniform_matrix_4f(const std::string &name, float matrix[],
+void Program::set_uniform_matrix_4f(const std::string &name,
+				    const float matrix[],
 				    bool transpose) {
     int location = glGetUniformLocation(m_handle, name.c_str());
     assert(location != -1);
     glUniformMatrix4fv(location, 1, transpose, matrix);
 }
 
-void Program::set_uniform_3f(const std::string &name, float vector[]) {
+void Program::set_uniform_3f(const std::string &name, const float vector[]) {
     int location = glGetUniformLocation(m_handle, name.c_str());
     assert(location != -1);
     glUniform3fv(location, 1, vector);

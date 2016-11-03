@@ -31,14 +31,14 @@ public:
 
     bool set_attribute(const Attribute& attr, VertexBuffer::Ptr buffer);
 
-    void set_uniform_1f(const std::string &name, float value);
+    void set_uniform_1f(const std::string &name, const float value);
 
-    void set_uniform_1i(const std::string &name, std::int32_t value);
+    void set_uniform_1i(const std::string &name, const std::int32_t value);
 
-    void set_uniform_matrix_4f(const std::string &name, float matrix[],
+    void set_uniform_matrix_4f(const std::string &name, const float matrix[],
 			       bool transpose=false);
 
-    void set_uniform_3f(const std::string &name, float vector[]);
+    void set_uniform_3f(const std::string &name, const float vector[]);
     
 private:
     Program(const std::vector<Shader::Ptr>& shaders);

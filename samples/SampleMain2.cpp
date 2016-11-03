@@ -42,6 +42,7 @@ void draw_offscreen() {
     offscreen_program->set_attribute(pos_attr, offscreen_pos_vbo);
     offscreen_program->set_attribute(nor_attr, offscreen_nor_vbo);
 
+    const float albedo[] = {1.0f, 1.0f, 1.0f};
     float view_matrix[16], projection_matrix[16];
     Transformation::view(Vec3f(0.0f, 0.15f, 1.0f),
 			 Vec3f(0.0f, 0.15f, 0.0f),
@@ -54,6 +55,7 @@ void draw_offscreen() {
 
     offscreen_program->set_uniform_matrix_4f("u_vmatrix", view_matrix);
     offscreen_program->set_uniform_matrix_4f("u_pmatrix", projection_matrix);
+    offscreen_program->set_uniform_3f("u_albedo", albedo);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -84,8 +86,16 @@ void draw_onscreen() {
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, color_texture->handle());
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, nor_texture->handle());
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, pos_texture->handle());
 
-    onscreen_program->set_uniform_1i("u_texture", 0);
+    const float light[] = {0.5f, 0.5f, 0.5f};
+    onscreen_program->set_uniform_3f("u_light", light);
+    onscreen_program->set_uniform_1i("u_albedo_texture", 0);
+    onscreen_program->set_uniform_1i("u_nor_texture", 1);
+    onscreen_program->set_uniform_1i("u_pos_texture", 2);
 
     onscreen_program->draw(Program::Mode::Triangles, onscreen_ibo);
     onscreen_program->unbind();
