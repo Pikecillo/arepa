@@ -23,8 +23,8 @@ set(EXECUTABLE_OUTPUT_PATH ..)
 
 include_directories(${AREPA_INCLUDE_DIR})
 
-add_executable(arepa-sample1 SampleMain1.cpp)
-target_link_libraries(arepa-sample1 arepa)
+add_executable(arepa-sample-mesh-normals SampleMeshNormals.cpp)
+target_link_libraries(arepa-sample-mesh-normals arepa)
 
-add_executable(arepa-sample2 SampleMain2.cpp)
-target_link_libraries(arepa-sample2 arepa)
+add_executable(arepa-sample-gbuffer SampleGBuffer.cpp)
+target_link_libraries(arepa-sample-gbuffer arepa)

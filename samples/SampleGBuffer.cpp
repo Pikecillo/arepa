@@ -146,9 +146,9 @@ void init_framebuffer() {
 
 void init_shaders() {
     std::string vs_src =
-	FileReader::read_text_file("../shaders/depth_vs.glsl");
+	FileReader::read_text_file("../shaders/gbuffer_vs.glsl");
     std::string fs_src =
-	FileReader::read_text_file("../shaders/depth_fs.glsl");
+	FileReader::read_text_file("../shaders/gbuffer_fs.glsl");
 
     Shader::Ptr vs = ShaderFactory::create<VertexShader>(vs_src);
     Shader::Ptr fs = ShaderFactory::create<FragmentShader>(fs_src);
@@ -207,7 +207,7 @@ int main(int argc, char *argv[]) {
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
     glutInitWindowSize(512, 512);
     glutInitWindowPosition(0, 100);
-    glutCreateWindow("My Shading System");
+    glutCreateWindow("G-Buffer");
     
     glewInit();
     

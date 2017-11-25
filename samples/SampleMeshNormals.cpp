@@ -56,8 +56,8 @@ void display() {
 }
 
 void init_shaders() {
-    std::string vs_src = FileReader::read_text_file("../shaders/vs.glsl");
-    std::string fs_src = FileReader::read_text_file("../shaders/fs.glsl");
+    std::string vs_src = FileReader::read_text_file("../shaders/normals_vs.glsl");
+    std::string fs_src = FileReader::read_text_file("../shaders/color_fs.glsl");
 
     Shader::Ptr vs = ShaderFactory::create<VertexShader>(vs_src);
     Shader::Ptr fs = ShaderFactory::create<FragmentShader>(fs_src);
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
     glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);
     glutInitWindowSize(512, 512);
     glutInitWindowPosition(0, 100);
-    glutCreateWindow("My Shading System");
+    glutCreateWindow("Visualize Normals");
     
     glewInit();
     
