@@ -4,8 +4,10 @@
 #include <memory>
 #include <string>
 
+namespace arepa {
+
 class Shader {
-public:
+  public:
     using Ptr = std::shared_ptr<Shader>;
 
     virtual ~Shader();
@@ -14,43 +16,45 @@ public:
 
     bool is_valid() const;
 
-    void init(const std::string& src);
+    void init(const std::string &src);
 
-protected:
+  protected:
     Shader();
 
     virtual void create() = 0;
 
-protected:
+  protected:
     std::uint32_t m_handle;
 };
 
 class VertexShader : public Shader {
-public:
+  public:
     VertexShader() = default;
 
     void operator=(const VertexShader &other) = delete;
 
-protected:
+  protected:
     void create() override;
 };
 
 class FragmentShader : public Shader {
-public:
+  public:
     FragmentShader() = default;
 
     void operator=(const VertexShader &other) = delete;
 
-protected:
+  protected:
     void create() override;
 };
 
 class GeometryShader : public Shader {
-public:
+  public:
     GeometryShader() = default;
 
     void operator=(const VertexShader &other) = delete;
 
-protected:
+  protected:
     void create() override;
 };
+
+} // namespace arepa

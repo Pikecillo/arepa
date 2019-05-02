@@ -1,16 +1,15 @@
-#ifndef __COMMON_H__
-#define __COMMON_H__
+#pragma once
 
 #include <assert.h>
 #include <math.h>
 #include <time.h>
 
 #include <algorithm>
-
-#include <iostream>
+#include <cstdint>
 #include <fstream>
-#include <string>
+#include <iostream>
 #include <map>
+#include <string>
 #include <vector>
 
 #include <GL/glew.h>
@@ -19,6 +18,4 @@
 // This specifies linker options in visual c++
 #pragma comment(lib, "glew32.lib")
 
-#define ASSERT(x) assert(x);
-
-#endif
+#define AREPA_ASSERT(x) assert(x);

@@ -8,307 +8,348 @@
 #include <assert.h>
 #include <math.h>
 
-#include "Vector.h"
+#include <arepa/Common.h>
+#include <arepa/Vector.h>
 
-template <template <typename, int, int> class M_, typename S_,
-	  int rows_, int cols_>
-class BasicMat {
-protected:
-  void set(S_ s) {
-    for(int i = 0; i < rows_; i++)
-      elements[i] = Vector<S_, cols_>(s);
-  }
-  
-public:
-  const Vector<S_, cols_> operator[](int i) const {
-    assert(i >= 0 && i <= rows_);
-    return elements[i];
-  }
-  
-  Vector<S_, cols_> &operator[](int i) {
-    assert(i >= 0 && i <= rows_);
-    return elements[i];
-  }
-  
-  const Vector<S_, cols_> row(int i) const {
-    assert(i >= 0 && i <= rows_);
-    return elements[i];
-  }
-  
-  Vector<S_, cols_> &row(int i) {
-    assert(i >= 0 && i <= rows_);
-    return elements[i];
-  }
- 
-  Vector<S_, rows_> col(int j) const {
-    assert(j >= 0 && j <= cols_);
-    Vector<S_, rows_> c;
-    for(int i = 0; i < rows_; i++)
-      c[i] = elements[i][j];
-    return c;
-  }
+namespace arepa {
 
-  M_<S_, rows_, cols_> &operator+=(const M_<S_, rows_, cols_> &other) {
-    for(int i = 0; i < rows_; i++)
-      for(int j = 0; j < cols_; j++)
-        elements[i][j] += other.elements[i][j];
-    
-    return *((M_<S_, rows_, cols_> *)this);
-  }
-  
-  M_<S_, rows_, cols_> &operator-=(const M_<S_, rows_, cols_> &other) {
-    for(int i = 0; i < rows_; i++)
-      for(int j = 0; j < cols_; j++)
-        elements[i][j] -= other.elements[i][j];
-    
-    return *((M_<S_, rows_, cols_> *)this);
-  }
-  
-  M_<S_, rows_, cols_> &operator*=(const S_ &scalar) {
-    for(int i = 0; i < rows_; i++)
-      for(int j = 0; j < cols_; j++)
-        elements[i][j] *= scalar;
-    
-    return *((M_<S_, rows_, cols_> *)this);
-  }
-  
-  template <int rows_o, int cols_o>
-  M_<S_, rows_, cols_o> &operator*=(const M_<S_, rows_o, cols_o> &other) {
-    M_<S_, rows_, cols_o> result(*((M_<S_, rows_, cols_o> *)this));
-    
-    for(int i = 0; i < rows_; i++)
-      for(int j = 0; j < cols_o; j++) {
-        S_ dot = 0.0;
-	
-        for(int k = 0; k < cols_; k++)
-          dot += (result.elements[i][k] * other.elements[k][j]);
-	
-        elements[i][j] = dot;
-      }
-    
-    return *((M_<S_, rows_, cols_o> *)this); 
-  }
-  
-  M_<S_, rows_, cols_> &operator/=(const S_ &scalar) {
-    for(int i = 0; i < rows_; i++)
-      for(int j = 0; j < cols_; j++)
-        elements[i][j] /= scalar;
-    
-    return *((M_<S_, rows_, cols_> *)this);
-  }
+template <template <typename, size_t, size_t> class MatrixType, typename Type,
+          size_t Rows, size_t Cols>
+class BaseMatrix {
+private:
+    static_assert(Rows > 0, "BaseMatrix: number of rows cannot be zero");
+    static_assert(Cols > 0, "BaseMatrix: number of columns cannot be zero");
 
-  M_<S_, rows_, cols_> operator+(const M_<S_, rows_, cols_> &other) const {
-    M_<S_, rows_, cols_> result(*((M_<S_, rows_, cols_> *)this));
-    result += other;
-    return result;
-  }
+  protected:
+    void set(Type s) {
+        for (size_t i = 0; i < Rows; i++)
+            elements[i] = Vector<Type, Cols>(s);
+    }
 
-  M_<S_, rows_, cols_> operator-() const {
-    M_<S_, rows_, cols_> result(*((M_<S_, rows_, cols_> *)this));
-    for(int i = 0; i < rows_; i++)
-      for(int j = 0; j < cols_; j++)
-        result[i][j] = -elements[i][j];
-    
-    return result;
-  }
-  
-  M_<S_, rows_, cols_> operator-(const M_<S_, rows_, cols_> &other) const {
-    M_<S_, rows_, cols_> result(*((M_<S_, rows_, cols_> *)this));
-    result -= other;
-    return result;
-  }
+    MatrixType<Type, Rows, Cols>* cast() const {
+        return static_cast<MatrixType<Type, Rows, Cols> *>(this);
+    }
 
-  M_<S_, rows_, cols_> operator*(const S_ &scalar) const {
-    M_<S_, rows_, cols_> result(*((M_<S_, rows_, cols_> *)this));
-    result *= scalar;
-    return result;
-  }
+  public:
+    const Vector<Type, Cols> operator[](size_t i) const {
+        AREPA_ASSERT(i <= Rows);
+        return elements[i];
+    }
 
-  Vector<S_, rows_> operator*(const Vector<S_, cols_> &vector) const {
-    Vector<S_, rows_> result;
-    for(int i = 0; i < rows_; i++)
-      result[i] = elements[i].dot(vector);
-    
-    return result;
-  }
+    Vector<Type, Cols> &operator[](size_t i) {
+        AREPA_ASSERT(i <= Rows);
+        return elements[i];
+    }
 
-  template <int rows_o, int cols_o>
-  M_<S_, rows_, cols_o> operator*
-  (const M_<S_, rows_o, cols_o> &other) const {
-    M_<S_, rows_, cols_o> result(*((M_<S_, rows_, cols_o> *)this));
-    result *= other;
-    return result;
-  }
-  
-  M_<S_, rows_, cols_> operator/(const S_ &scalar) const {
-    M_<S_, rows_, cols_> result(*((M_<S_, rows_, cols_> *)this));
-    result /= scalar;
-    return result;
-  }
+    const Vector<Type, Cols> row(size_t i) const {
+        AREPA_ASSERT(i <= Rows);
+        return elements[i];
+    }
 
-  M_<S_, cols_, rows_> transpose() const {
-    M_<S_, cols_, rows_> trans(*((M_<S_, cols_, rows_> *)this));
-    
-    for(int i = 0; i < cols_; i++)
-      for(int j = 0; j < rows_; j++)
-        trans[i][j] = this->elements[j][i];
-    
-    return trans;
-  }
-  
-  M_<S_, rows_ - 1, cols_ - 1> subMatrix(int i, int j) const {
-    assert(i >= 0 && i < rows_ && j >= 0 && j < cols_);
-    
-    M_<S_, rows_ - 1, cols_ - 1> m;
-    for(int x = 0; x < rows_ - 1; x++)
-      for(int y = 0; y < cols_ - 1; y++)
-	m[x][y] = this->elements[(x < i ? x : x + 1)][(y < j ? y : y + 1)];
-    return m;
-  }
-  
-  static M_<S_, rows_, cols_> identity() {
-    M_<S_, rows_, cols_> id;
-    
-    for(int i = 0; i < rows_; i++)
-      for(int j = 0; j < cols_; j++)
-        id[i][j] = (i == j ? (S_)1 : (S_)0);
-    
-    return id;
-  }
-  
-  template <int dim_>
-  static M_<S_, dim_, dim_> outerProduct(const Vector<S_, dim_> &a,
-					 const Vector<S_, dim_> &b) {
-    M_<S_, dim_, dim_> outer;
-    
-    for(int i = 0; i < rows_; i++)
-      for(int j = 0; j < cols_; j++)
-        outer[i][j] = a[i] * b[j];
-    
-    return outer;
-  }
-  
-  template <int dim_>
-  static M_<S_, dim_, dim_> projection(const Vector<S_, dim_> &v) {
-    return (M_<S_, dim_, dim_>::identity() -
-	    M_<S_, dim_, dim_>::outerProduct(v, v));
-  }
-  
-protected:
-  Vector<S_, cols_> elements[rows_]; 
+    Vector<Type, Cols> &row(size_t i) {
+        AREPA_ASSERT(i <= Rows);
+        return elements[i];
+    }
+
+    Vector<Type, Rows> col(size_t j) const {
+        AREPA_ASSERT(j <= Cols);
+        Vector<Type, Rows> c;
+        for (size_t i = 0; i < Rows; i++)
+            c[i] = elements[i][j];
+        return c;
+    }
+
+    MatrixType<Type, Rows, Cols> &
+    operator+=(const MatrixType<Type, Rows, Cols> &other) {
+        for (size_t i = 0; i < Rows; i++)
+            for (size_t j = 0; j < Cols; j++)
+                elements[i][j] += other.elements[i][j];
+
+        return *cast();
+    }
+
+    MatrixType<Type, Rows, Cols> &
+    operator-=(const MatrixType<Type, Rows, Cols> &other) {
+        for (size_t i = 0; i < Rows; i++)
+            for (size_t j = 0; j < Cols; j++)
+                elements[i][j] -= other.elements[i][j];
+
+        return *cast();
+    }
+
+    MatrixType<Type, Rows, Cols> &operator*=(const Type &scalar) {
+        for (size_t i = 0; i < Rows; i++)
+            for (size_t j = 0; j < Cols; j++)
+                elements[i][j] *= scalar;
+
+        return *cast();
+    }
+
+    template <size_t RowsInput, size_t ColsInput>
+    MatrixType<Type, Rows, Cols> &
+    operator*=(const MatrixType<Type, RowsInput, ColsInput> &other) {
+        static_assert(Cols == RowsInput && Cols == ColsInput, "BaseMatrix: size mismatch in multiplications operands");
+        MatrixType<Type, Rows, Cols> copy(*cast());
+
+        for (size_t i = 0; i < Rows; i++)
+            for (size_t j = 0; j < ColsInput; j++) {
+                Type dot = static_cast<Type>(0);
+
+                for (size_t k = 0; k < Cols; k++)
+                    dot += (copy.elements[i][k] * other.elements[k][j]);
+
+                elements[i][j] = dot;
+            }
+
+        return *cast();
+    }
+
+    MatrixType<Type, Rows, Cols> &operator/=(const Type &scalar) {
+        for (size_t i = 0; i < Rows; i++)
+            for (size_t j = 0; j < Cols; j++)
+                elements[i][j] /= scalar;
+
+        return *cast();
+    }
+
+    MatrixType<Type, Rows, Cols>
+    operator+(const MatrixType<Type, Rows, Cols> &other) const {
+        MatrixType<Type, Rows, Cols> result(*cast());
+        result += other;
+        return result;
+    }
+
+    MatrixType<Type, Rows, Cols> operator-() const {
+        MatrixType<Type, Rows, Cols> result(*cast());
+        for (size_t i = 0; i < Rows; i++)
+            for (size_t j = 0; j < Cols; j++)
+                result[i][j] = -elements[i][j];
+
+        return result;
+    }
+
+    MatrixType<Type, Rows, Cols>
+    operator-(const MatrixType<Type, Rows, Cols> &other) const {
+        MatrixType<Type, Rows, Cols> result(*cast());
+        result -= other;
+        return result;
+    }
+
+    MatrixType<Type, Rows, Cols> operator*(const Type &scalar) const {
+        MatrixType<Type, Rows, Cols> result(*cast());
+        result *= scalar;
+        return result;
+    }
+
+    Vector<Type, Rows> operator*(const Vector<Type, Cols> &vector) const {
+        Vector<Type, Rows> result;
+        for (size_t i = 0; i < Rows; i++)
+            result[i] = elements[i].dot(vector);
+
+        return result;
+    }
+
+    template <size_t RowsInput, size_t ColsInput>
+    MatrixType<Type, Rows, ColsInput>
+    operator*(const MatrixType<Type, RowsInput, ColsInput> &other) const {
+        static_assert(Cols == RowsInput, "BaseMatrix: size mismatch in multiplications operands");
+        MatrixType<Type, Rows, ColsInput> result;
+        for (size_t i = 0; i < Rows; i++) {
+            for(size_t j = 0; j < ColsInput; j++) {
+                Type dot = static_cast<Type>(0);
+                for(size_t k = 0; k < Cols; k++) {
+                    dot += elements[i][k] * other.elements[k][j];
+                }
+
+                result.elements[i][j] = dot;
+            }
+        }
+
+        return result;
+    }
+
+    MatrixType<Type, Rows, Cols> operator/(const Type &scalar) const {
+        MatrixType<Type, Rows, Cols> result(*cast());
+        result /= scalar;
+        return result;
+    }
+
+    MatrixType<Type, Cols, Rows> transpose() const {
+        MatrixType<Type, Cols, Rows> trans(*cast());
+
+        for (size_t i = 0; i < Cols; i++)
+            for (size_t j = i + 1; j < Rows; j++)
+                trans[i][j] = this->elements[j][i];
+
+        return trans;
+    }
+
+    MatrixType<Type, Rows - 1, Cols - 1> subMatrix(size_t i, size_t j) const {
+        AREPA_ASSERT(i < Rows && j < Cols);
+
+        MatrixType<Type, Rows - 1, Cols - 1> m;
+        for (size_t x = 0; x < Rows - 1; x++)
+            for (size_t y = 0; y < Cols - 1; y++)
+                m[x][y] =
+                    this->elements[(x < i ? x : x + 1)][(y < j ? y : y + 1)];
+        return m;
+    }
+
+    static MatrixType<Type, Rows, Cols> identity() {
+        MatrixType<Type, Rows, Cols> id;
+
+        for (size_t i = 0; i < Rows; i++)
+            for (size_t j = 0; j < Cols; j++)
+                id[i][j] = (i == j ? static_cast<Type>(1) : static_cast<Type>(0));
+
+        return id;
+    }
+
+    template <size_t Dim>
+    static MatrixType<Type, Dim, Dim> outerProduct(const Vector<Type, Dim> &a,
+                                                   const Vector<Type, Dim> &b) {
+        MatrixType<Type, Dim, Dim> outer;
+
+        for (size_t i = 0; i < Rows; i++)
+            for (size_t j = 0; j < Cols; j++)
+                outer[i][j] = a[i] * b[j];
+
+        return outer;
+    }
+
+    template <size_t Dim>
+    static MatrixType<Type, Dim, Dim> projection(const Vector<Type, Dim> &v) {
+        return (MatrixType<Type, Dim, Dim>::identity() -
+                MatrixType<Type, Dim, Dim>::outerProduct(v, v));
+    }
+
+  protected:
+    Vector<Type, Cols> elements[Rows];
 };
 
-template <typename S_, int rows_, int cols_>
-class Mat : public BasicMat<Mat, S_, rows_, cols_> {
-public:
-  Mat() { assert(rows_ > 0 && cols_ > 0); }
- 
-  Mat(S_ s) { this->set(s); }
+template <typename Type, size_t Rows, size_t Cols>
+class Matrix : public BaseMatrix<Matrix, Type, Rows, Cols> {
+  public:
+    Matrix() = default;
 
-  Mat(const Mat<S_, rows_, cols_> &other) {
-    (*this) = other;
-  }
+    Matrix(Type s) {
+        this->set(s);
+    }
 
-  Mat<S_, rows_, cols_> &operator=(const Mat<S_, rows_, cols_> &other) {
-    for(int i = 0; i < rows_; i++)
-      this->elements[i] = other.elements[i];
-    return (*this);
-  }
+    Matrix(const Matrix<Type, Rows, Cols> &other) {
+        (*this) = other;
+    }
+
+    Matrix<Type, Rows, Cols> &operator=(const Matrix<Type, Rows, Cols> &other) {
+        for (size_t i = 0; i < Rows; i++)
+            this->elements[i] = other.elements[i];
+        return (*this);
+    }
 };
 
-template <class S_>
-class Mat<S_, 2, 2> : public BasicMat<Mat, S_, 2, 2> {
-public:
-  Mat() {}
+template <class Type>
+class Matrix<Type, 2, 2> : public BaseMatrix<Matrix, Type, 2, 2> {
+  public:
+    Matrix() = default;
 
-  Mat(S_ s) { this->set(s); }
+    Matrix(Type s) {
+        this->set(s);
+    }
 
-  Mat(const Mat<S_, 2, 2> &other) {
-    (*this) = other;
-  }
-  
-  Mat<S_, 2, 2> &operator=(const Mat<S_, 2, 2> &other) {
-    this->elements[0] = other.elements[0];
-    this->elements[1] = other.elements[1];
-    return (*this);
-  }
-  
-  S_ det() const {
-    return (this->elements[0][0] * this->elements[1][1] -
-            this->elements[0][1] * this->elements[1][0]);
-  }
+    Matrix(const Matrix<Type, 2, 2> &other) {
+        (*this) = other;
+    }
 
-  Mat<S_, 2, 2> inverse() const {
-    Mat<S_, 2, 2> cof_trans;
-    const S_ tol = 1E-20;
+    Matrix<Type, 2, 2> &operator=(const Matrix<Type, 2, 2> &other) {
+        this->elements[0] = other.elements[0];
+        this->elements[1] = other.elements[1];
+        return (*this);
+    }
 
-    // Create matrix of cofactors
-    cof_trans[0][0] = this->elements[1][1];
-    cof_trans[0][1] = -this->elements[0][1];
-    cof_trans[1][0] = -this->elements[1][0];
-    cof_trans[1][1] = this->elements[0][0];
+    Type det() const {
+        return (this->elements[0][0] * this->elements[1][1] -
+                this->elements[0][1] * this->elements[1][0]);
+    }
 
-    S_ d = det();
-    assert(fabs(d) > tol);
+    Matrix<Type, 2, 2> inverse() const {
+        Matrix<Type, 2, 2> cof_trans;
+        const Type tol = static_cast<Type>(1E-20);
 
-    return cof_trans * (1 / d);
-  }
+        // Create matrix of cofactors
+        cof_trans[0][0] = this->elements[1][1];
+        cof_trans[0][1] = -this->elements[0][1];
+        cof_trans[1][0] = -this->elements[1][0];
+        cof_trans[1][1] = this->elements[0][0];
+
+        Type d = det();
+        AREPA_ASSERT(fabs(d) > tol);
+
+        return cof_trans * (1 / d);
+    }
 };
 
-template <class S_>
-class Mat<S_, 3, 3> : public BasicMat<Mat, S_, 3, 3> {
-public:
-  Mat() {}
+template <class Type>
+class Matrix<Type, 3, 3> : public BaseMatrix<Matrix, Type, 3, 3> {
+  public:
+    Matrix() = default;
 
-  Mat(S_ s) { this->set(s); }
+    Matrix(Type s) {
+        this->set(s);
+    }
 
-  Mat(const Mat<S_, 3, 3> &other) {
-    (*this) = other;
-  }
-  
-  Mat<S_, 3, 3> &operator=(const Mat<S_, 3, 3> &other) {
-    this->elements[0] = other.elements[0];
-    this->elements[1] = other.elements[1];
-    this->elements[2] = other.elements[2];
-    return (*this);
-  }
-  
-  S_ det() const {
-    return
-      (this->elements[0][0] * this->elements[1][1] * this->elements[2][2] +
-       this->elements[0][1] * this->elements[1][2] * this->elements[2][0] +
-       this->elements[0][2] * this->elements[1][0] * this->elements[2][1] -
-       this->elements[0][2] * this->elements[1][1] * this->elements[2][0] -
-       this->elements[0][0] * this->elements[1][2] * this->elements[2][1] -
-       this->elements[0][1] * this->elements[1][0] * this->elements[2][2]);
-  }
+    Matrix(const Matrix<Type, 3, 3> &other) {
+        (*this) = other;
+    }
 
-  Mat<S_, 3, 3> inverse() const {
-    Mat<S_, 3, 3> cof;
-    const S_ tol = 1E-20;
+    Matrix<Type, 3, 3> &operator=(const Matrix<Type, 3, 3> &other) {
+        this->elements[0] = other.elements[0];
+        this->elements[1] = other.elements[1];
+        this->elements[2] = other.elements[2];
+        return (*this);
+    }
 
-    // Create matrix of cofactors
-    for(int i = 0; i < 3; i++)
-      for(int j = 0; j < 3; j++) {
-        S_ c = this->subMatrix(i, j).det();
-        assert(fabs(c) > tol);
-        cof[i][j] = c * ((i + j) % 2 ? -1 : 1);
-      }
-    
-    S_ d = det();
-    assert(fabs(d) > tol);
+    Type det() const {
+        return (
+            this->elements[0][0] * this->elements[1][1] * this->elements[2][2] +
+            this->elements[0][1] * this->elements[1][2] * this->elements[2][0] +
+            this->elements[0][2] * this->elements[1][0] * this->elements[2][1] -
+            this->elements[0][2] * this->elements[1][1] * this->elements[2][0] -
+            this->elements[0][0] * this->elements[1][2] * this->elements[2][1] -
+            this->elements[0][1] * this->elements[1][0] * this->elements[2][2]);
+    }
 
-    return cof.transpose() / d;
-  }
+    Matrix<Type, 3, 3> inverse() const {
+        Matrix<Type, 3, 3> cof;
+        const Type tol = static_cast<Type>(1E-20);
+
+        // Create matrix of cofactors
+        for (size_t i = 0; i < 3; i++)
+            for (size_t j = 0; j < 3; j++) {
+                const Type c = this->subMatrix(i, j).det();
+                AREPA_ASSERT(fabs(c) > tol);
+                cof[i][j] = c * ((i + j) % 2 ? -1 : 1);
+            }
+
+        const Type d = det();
+        assert(fabs(d) > tol);
+
+        return cof.transpose() / d;
+    }
 };
 
-typedef Mat<float, 2, 2> Mat2f;
-typedef Mat<float, 3, 3> Mat3f;
-typedef Mat<float, 4, 4> Mat4f;
+template <typename Type> using Mat2 = Matrix<Type, 2, 2>;
+template <typename Type> using Mat3 = Matrix<Type, 3, 3>;
+template <typename Type> using Mat4 = Matrix<Type, 4, 4>;
+template <typename Type> using Mat3x4 = Matrix<Type, 3, 4>;
 
-typedef Mat<double, 2, 2> Mat2d;
-typedef Mat<double, 3, 3> Mat3d;
-typedef Mat<double, 4, 4> Mat4d;
+using Mat2f = Mat2<float>;
+using Mat3f = Mat3<float>;
+using Mat4f = Mat4<float>;
+using Mat3x4f = Mat3x4<float>;
 
-typedef Mat<float, 3, 4> Mat3x4f;
-typedef Mat<double, 3, 4> Mat3x4d;
+using Mat2d = Mat2<double>;
+using Mat3d = Mat3<double>;
+using Mat4d = Mat4<double>;
+using Mat3x4d = Mat3x4<double>;
+
+} // namespace arepa

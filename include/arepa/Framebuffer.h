@@ -5,14 +5,16 @@
 
 #include <arepa/Texture.h>
 
+namespace arepa {
+
 class Renderbuffer {
-public:
+  public:
     using Ptr = std::shared_ptr<Renderbuffer>;
 
     enum class Type { Color, Depth };
 
-public:
-    Ptr create(std::uint32_t width, std::uint32_t height, Type type);
+  public:
+    Ptr create(size_t width, size_t height, Type type);
 
     virtual ~Renderbuffer();
 
@@ -20,18 +22,20 @@ public:
 
     void unbind() const;
 
-private:
-    Renderbuffer(std::uint32_t width, std::uint32_t height, Type type);
+  private:
+    Renderbuffer(size_t width, size_t height, Type type);
 
-private:
+  private:
     std::uint32_t m_handle;
 };
 
 class Framebuffer {
-public:
+  public:
     using Ptr = std::shared_ptr<Framebuffer>;
 
-public:
+  public:
+    Framebuffer();
+
     static Ptr create();
 
     virtual ~Framebuffer();
@@ -48,9 +52,8 @@ public:
 
     void blit() const;
 
-private:
-    Framebuffer();
-
-private:
+  private:
     std::uint32_t m_handle;
 };
+
+} // namespace arepa

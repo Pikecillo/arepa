@@ -3,6 +3,7 @@
 
 #include <arepa/Buffer.h>
 
+namespace arepa {
 Buffer::Buffer() : m_handle(0) {
     glGenBuffers(1, &m_handle);
 }
@@ -22,10 +23,11 @@ void VertexBuffer::bind() {
 void VertexBuffer::set_data(const std::vector<float> &data) {
     bind();
     glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(),
-		 GL_STATIC_DRAW);
+                 GL_STATIC_DRAW);
 }
 
-IndexBuffer::IndexBuffer() : Buffer(), m_size(0) {}
+IndexBuffer::IndexBuffer() : Buffer(), m_size(0) {
+}
 
 IndexBuffer::Ptr IndexBuffer::create() {
     return std::shared_ptr<IndexBuffer>(new IndexBuffer);
@@ -40,5 +42,7 @@ void IndexBuffer::set_data(const std::vector<std::uint32_t> &data) {
 
     bind();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(std::uint32_t),
-    		 data.data(), GL_STATIC_DRAW);
+                 data.data(), GL_STATIC_DRAW);
 }
+
+} // namespace arepa

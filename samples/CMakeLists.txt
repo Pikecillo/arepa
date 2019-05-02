@@ -28,3 +28,6 @@ target_link_libraries(arepa-sample-mesh-normals arepa)
 
 add_executable(arepa-sample-gbuffer SampleGBuffer.cpp)
 target_link_libraries(arepa-sample-gbuffer arepa)
+
+add_executable(arepa-sample-half-edge SampleHalfEdge.cpp)
+target_link_libraries(arepa-sample-half-edge arepa)

@@ -4,19 +4,21 @@
 #include <memory>
 #include <vector>
 
+namespace arepa {
+
 class Buffer {
-public:
+  public:
     virtual ~Buffer();
 
-protected:
+  protected:
     Buffer();
 
-protected:
+  protected:
     std::uint32_t m_handle;
 };
 
 class VertexBuffer : public Buffer {
-public:
+  public:
     using Ptr = std::shared_ptr<VertexBuffer>;
 
     static Ptr create();
@@ -25,30 +27,31 @@ public:
 
     void set_data(const std::vector<float> &data);
 
-private:
+  private:
     VertexBuffer() = default;
 };
 
 class IndexBuffer : public Buffer {
-public:
+  public:
     using Ptr = std::shared_ptr<IndexBuffer>;
 
     static Ptr create();
 
     void bind();
 
-    void set_data(const std::vector<std::uint32_t>& data);
+    void set_data(const std::vector<std::uint32_t> &data);
 
     std::uint32_t size() const;
 
-private:
+  private:
     IndexBuffer();
 
-private:
+  private:
     std::uint32_t m_size;
 };
 
-inline
-std::uint32_t IndexBuffer::size() const {
+inline std::uint32_t IndexBuffer::size() const {
     return m_size;
 }
+
+} // namespace arepa

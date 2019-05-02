@@ -1,17 +1,17 @@
 #include <arepa/Common.h>
 #include <arepa/Framebuffer.h>
 
-Renderbuffer::Renderbuffer(std::uint32_t width, std::uint32_t height,
-			   Type type) {
+namespace arepa {
+Renderbuffer::Renderbuffer(size_t width, size_t height, Type type) {
     glGenRenderbuffers(1, &m_handle);
 
     bind();
 
     if (type == Type::Color)
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, width, height);
     else
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT,
-			      width, height);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width,
+                              height);
 
     unbind();
 }
@@ -20,9 +20,7 @@ Renderbuffer::~Renderbuffer() {
     glDeleteRenderbuffers(1, &m_handle);
 }
 
-Renderbuffer::Ptr Renderbuffer::create(std::uint32_t width,
-				       std::uint32_t height,
-				       Type type) {
+Renderbuffer::Ptr Renderbuffer::create(size_t width, size_t height, Type type) {
     return std::shared_ptr<Renderbuffer>(new Renderbuffer(width, height, type));
 }
 
@@ -43,7 +41,7 @@ Framebuffer::~Framebuffer() {
 }
 
 Framebuffer::Ptr Framebuffer::create() {
-    return std::shared_ptr<Framebuffer>(new Framebuffer);
+    return std::make_shared<Framebuffer>();
 }
 
 void Framebuffer::bind() const {
@@ -57,14 +55,14 @@ void Framebuffer::unbind() const {
 void Framebuffer::attach_color(Texture::Ptr texture, std::uint8_t slot) const {
     bind();
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + slot,
-			   GL_TEXTURE_2D, texture->handle(), 0);
+                           GL_TEXTURE_2D, texture->handle(), 0);
     unbind();
 }
 
 void Framebuffer::attach_depth(Texture::Ptr texture) const {
     bind();
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-			   GL_TEXTURE_2D, texture->handle(), 0);
+                           GL_TEXTURE_2D, texture->handle(), 0);
     unbind();
 }
 
@@ -77,6 +75,8 @@ void Framebuffer::blit() const {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
     // TODO: remove hardcoded values
-    glBlitFramebuffer(0, 0, 255, 255, 0, 0, 255, 255,
-		      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBlitFramebuffer(0, 0, 255, 255, 0, 0, 255, 255, GL_COLOR_BUFFER_BIT,
+                      GL_NEAREST);
 }
+
+} // namespace arepa

@@ -1,6 +1,8 @@
 #include <arepa/Timer.h>
 
-Timer::Timer() : m_is_active(false) {}
+namespace arepa {
+Timer::Timer() : m_is_active(false) {
+}
 
 void Timer::start() {
     m_is_active = true;
@@ -19,3 +21,4 @@ double Timer::stop() {
 bool Timer::is_active() const {
     return m_is_active;
 }
+} // namespace arepa

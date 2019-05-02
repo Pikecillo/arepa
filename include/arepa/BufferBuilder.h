@@ -2,14 +2,16 @@
 
 #include <cstdint>
 
-#include "Buffer.h"
-#include "Mesh.h"
+#include <arepa/Buffer.h>
+#include <arepa/Mesh.h>
+
+namespace arepa {
 
 class BufferBuilder {
-public:
-    BufferBuilder(Mesh::Ptr mesh);
+  public:
+    BufferBuilder(Meshf::Ptr mesh);
 
-    void set_mesh(Mesh::Ptr mesh);
+    void set_mesh(Meshf::Ptr mesh);
 
     VertexBuffer::Ptr build_position_buffer() const;
 
@@ -19,14 +21,15 @@ public:
 
     IndexBuffer::Ptr build_index_buffer() const;
 
-private:
-    Mesh::Ptr m_mesh;
+  private:
+    Meshf::Ptr m_mesh;
 };
 
-inline
-BufferBuilder::BufferBuilder(Mesh::Ptr mesh) : m_mesh(mesh) {}
+inline BufferBuilder::BufferBuilder(Meshf::Ptr mesh) : m_mesh(mesh) {
+}
 
-inline
-void BufferBuilder::set_mesh(Mesh::Ptr mesh) {
+inline void BufferBuilder::set_mesh(Meshf::Ptr mesh) {
     m_mesh = mesh;
 }
+
+} // namespace arepa

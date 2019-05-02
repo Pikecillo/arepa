@@ -2,10 +2,12 @@
 
 #include <memory>
 
-#include "Shader.h"
+#include <arepa/Shader.h>
+
+namespace arepa {
 
 class ShaderFactory {
-public:
+  public:
     template <class ShaderType>
     static Shader::Ptr create(const std::string &src);
 };
@@ -16,3 +18,5 @@ Shader::Ptr ShaderFactory::create(const std::string &src) {
     shader->init(src);
     return shader;
 }
+
+} // namespace arepa

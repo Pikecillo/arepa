@@ -1,0 +1,11 @@
+﻿---
+AllowShortBlocksOnASingleLine: 'false'
+AllowShortFunctionsOnASingleLine: None
+IndentWidth: '4'
+NamespaceIndentation: None
+PointerAlignment: Right
+SortIncludes: 'true'
+TabWidth: '4'
+UseTab: Never
+
+...
