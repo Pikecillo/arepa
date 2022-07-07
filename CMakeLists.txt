@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(arepa)
 
+set(OpenGL_GL_PREFERENCE LEGACY)
+
 find_package(OpenGL REQUIRED)
 if (OPENGL_FOUND)
     include_directories(${OPENGL_INCLUDE_DIRS})

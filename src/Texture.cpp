@@ -12,6 +12,8 @@ auto gl_internal_format = [](Texture::InternalFormat format) {
         return GL_RGB16F;
     case Texture::InternalFormat::Depth:
         return GL_DEPTH_COMPONENT24;
+    default:
+        return GL_NONE;
     }
 };
 
@@ -23,6 +25,8 @@ auto gl_format = [](Texture::Format format) {
         return GL_RGB;
     case Texture::Format::Depth:
         return GL_DEPTH_COMPONENT;
+    default:
+        return GL_NONE;
     }
 };
 
@@ -32,6 +36,8 @@ auto gl_type = [](Texture::Type type) {
         return GL_UNSIGNED_BYTE;
     case Texture::Type::Float:
         return GL_FLOAT;
+    default:
+        return GL_NONE;
     }
 };
 } // namespace

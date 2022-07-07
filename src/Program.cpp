@@ -49,6 +49,8 @@ bool Program::set_attribute(const Attribute &attr, VertexBuffer::Ptr buffer) {
             return GL_FLOAT;
         case Attribute::Type::Int:
             return GL_INT;
+        default:
+            return GL_NONE;
         }
     };
 
@@ -80,6 +82,8 @@ bool Program::draw(Program::Mode mode, IndexBuffer::Ptr index) {
             return GL_TRIANGLE_STRIP;
         case Mode::TriangleFan:
             return GL_TRIANGLE_FAN;
+        default:
+            return GL_NONE;
         }
     };
 
